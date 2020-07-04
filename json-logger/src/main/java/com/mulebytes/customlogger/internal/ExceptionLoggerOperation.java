@@ -32,8 +32,8 @@ public class ExceptionLoggerOperation {
 	 * @throws JsonProcessingException 
 	 */
 	@MediaType(value = ANY, strict = false)
-	public void errorLog(
-			@ParameterGroup(name = "Exception") ExceptionProperties exceptionProperties,
+	public void errorLog(@ParameterGroup(name = "Exception") ExceptionProperties exceptionProperties,
+			@ParameterGroup(name = "Additional Error Info") AdditionalLogDetails additionalLogDetails,
 			ComponentLocation location,
 			@Config CustomLoggerConfiguration customLoggerConfiguration) throws JsonProcessingException {
 
@@ -73,6 +73,7 @@ public class ExceptionLoggerOperation {
 		locationInfo.put("fileName", location.getFileName().orElse(""));
 
 		logContent.put("location", locationInfo);
+		logContent.put("additionalErrorDetails", additionalLogDetails.getAdditionalLogDetails());
 		ObjectMapper mapper = new ObjectMapper();
 		String finalLog= (customLoggerConfiguration.isPrettyPrint())? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(logContent): mapper.writeValueAsString(logContent);
 		logger.log(levelMap.get(exceptionProperties.getLogLevel()), finalLog);
