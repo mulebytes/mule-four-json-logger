@@ -12,21 +12,25 @@ public class ExceptionProperties {
 	@DisplayName("Error Classification")
 	@Optional(defaultValue = "TECHNICAL_ERROR")
 	private ErrorClassification.errorClassification errorClassification;
-
+	@Parameter
+	@Optional(defaultValue = "#[now()]")
+	@DisplayName("Timestamp")
+	@Summary("Timestamp")
+	private String timeStamp;
 	@Parameter
 	@DisplayName("Error Code")
 	@Summary("Error Code")
-	@Optional(defaultValue="ERR001")
+	@Optional(defaultValue = "ERR001")
 	private String errorCode;
 	@Parameter
 	@DisplayName("Error Type")
 	@Summary("Type of Exception")
-	@Optional(defaultValue="#[[error.errorType.namespace default (app.name),error.errorType.identifier default \"ERROR\"] joinBy \":\"]")
+	@Optional(defaultValue = "#[[error.errorType.namespace default (app.name),error.errorType.identifier default \"ERROR\"] joinBy \":\"]")
 	private String errorType;
 	@Parameter
 	@DisplayName("Description")
 	@Summary("Exception Description")
-	@Optional(defaultValue="#[error.description default \"Error Occured\" replace \"\\\"\" with \"\"]")
+	@Optional(defaultValue = "#[error.description default \"Error Occured\" replace \"\\\"\" with \"\"]")
 	private String errorDescription;
 
 	@Parameter
@@ -67,6 +71,10 @@ public class ExceptionProperties {
 
 	public String getTransactionId() {
 		return transactionId;
+	}
+
+	public String getTimestamp() {
+		return timeStamp;
 	}
 
 	public String getPayload() {

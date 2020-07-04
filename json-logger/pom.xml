@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mulebytes</groupId>
     <artifactId>json-logger</artifactId>
-    <version>1.0.0-RELEASE</version>
+    <version>1.0.7</version>
     <packaging>mule-extension</packaging>
 
     <parent>
@@ -36,6 +36,11 @@
             <artifactId>log4j-core</artifactId>
             <version>2.11.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.3</version>
         </dependency>
     </dependencies>
 </project>

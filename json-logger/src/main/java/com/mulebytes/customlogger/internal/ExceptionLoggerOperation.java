@@ -1,19 +1,19 @@
 package com.mulebytes.customlogger.internal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mulebytes.customlogger.internal.model.*;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.message.ObjectMessage;
-import org.json.JSONObject;
 import org.mule.runtime.api.component.location.ComponentLocation;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 
-import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
@@ -29,23 +29,23 @@ public class ExceptionLoggerOperation {
 	 * Author: Jagadishwar Reddy
 	 *
 	 * @return
+	 * @throws JsonProcessingException 
 	 */
-	@SuppressWarnings("unused")
 	@MediaType(value = ANY, strict = false)
 	public void errorLog(
 			@ParameterGroup(name = "Exception") ExceptionProperties exceptionProperties,
 			ComponentLocation location,
-			@Config CustomLoggerConfiguration customLoggerConfiguration) {
+			@Config CustomLoggerConfiguration customLoggerConfiguration) throws JsonProcessingException {
 
 		initLogger("com.mule.error.log");
 
 		final Map<LoggerLevelProperty.LogLevel, Level> levelMap = getMappings();
 
-		Map<String, Object> logContent = new HashMap<>();
+		LinkedHashMap<String, Object> logContent = new LinkedHashMap<>();
 		logContent.put("appName", customLoggerConfiguration.getAppName());
 		logContent.put("appVersion", customLoggerConfiguration.getAppVersion());
 		logContent.put("env", customLoggerConfiguration.getEnv());
-		logContent.put("timestamp", Instant.now().toString());
+		logContent.put("timestamp", exceptionProperties.getTimestamp());
 
 		// This is because, we need to see what is in the nested object when the
 		// Hashmap is logged.
@@ -67,15 +67,15 @@ public class ExceptionLoggerOperation {
 
 		Map<String, String> locationInfo = new HashMap<>();
 		locationInfo.put("location", location.getLocation());
-		locationInfo.put("rootContainer", location.getLocation());
+		locationInfo.put("rootContainer", location.getRootContainerName());
 		locationInfo.put("component", location.getComponentIdentifier()
 				.getIdentifier().toString());
 		locationInfo.put("fileName", location.getFileName().orElse(""));
 
 		logContent.put("location", locationInfo);
-		ObjectMessage objectMessage = new ObjectMessage(logContent);
-		logger.log(levelMap.get(exceptionProperties.getLogLevel()),
-				new JSONObject(logContent));
+		ObjectMapper mapper = new ObjectMapper();
+		String finalLog= (customLoggerConfiguration.isPrettyPrint())? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(logContent): mapper.writeValueAsString(logContent);
+		logger.log(levelMap.get(exceptionProperties.getLogLevel()), finalLog);
 	}
 
 	private void initLogger(String category) {

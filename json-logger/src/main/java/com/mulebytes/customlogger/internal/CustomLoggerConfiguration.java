@@ -30,7 +30,12 @@ public class CustomLoggerConfiguration {
     @Summary("Mule Application Environment")
     @Optional(defaultValue = "${env}")
     private String env;
-
+    
+    @Parameter
+    @DisplayName("Pretty Print JSON Log")
+    @Optional(defaultValue = "True")
+    public boolean prettyPrint;
+    
     public String getAppName() {
         return appName;
     }
@@ -41,6 +46,10 @@ public class CustomLoggerConfiguration {
 
     public String getEnv() {
         return env;
+    }
+    
+    public boolean isPrettyPrint() {
+        return prettyPrint;
     }
 
 }
