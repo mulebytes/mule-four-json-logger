@@ -35,7 +35,7 @@ public class CustomLoggerOperation {
 
 	@MediaType(value = ANY, strict = false)
 	public void log(@ParameterGroup(name = "Log") LogProperties logProperties,
-			@ParameterGroup(name = "Additional Log Info") AdditionalLogDetails additionalLogDetails,
+			@ParameterGroup(name = "Additional Log Info") ExtendedPoperties extendedLogInfo,
 			ComponentLocation location,
 			@Config CustomLoggerConfiguration customLoggerConfiguration) throws JsonProcessingException {
 
@@ -67,7 +67,8 @@ public class CustomLoggerOperation {
 		locationInfo.put("fileName", location.getFileName().orElse(""));
 
 		logContent.put("logLocation", locationInfo);
-		logContent.put("additionalLogDetails", additionalLogDetails.getAdditionalLogDetails());
+		if(extendedLogInfo.getExtendedPoperties() != null)
+		logContent.put("additionalLogDetails", extendedLogInfo.getExtendedPoperties());
 		ObjectMapper mapper = new ObjectMapper();
 		String finalLog= (customLoggerConfiguration.isPrettyPrint())? mapper.writerWithDefaultPrettyPrinter().writeValueAsString(logContent): mapper.writeValueAsString(logContent);
 		logger.log(levelMap.get(logProperties.getLogLevel()), finalLog);
