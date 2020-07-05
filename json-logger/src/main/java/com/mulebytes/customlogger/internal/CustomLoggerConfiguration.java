@@ -32,7 +32,7 @@ public class CustomLoggerConfiguration {
     private String env;
     
     @Parameter
-    @DisplayName("Pretty Print JSON Log")
+    @DisplayName("JSON Log Pretty Print")
     @Optional(defaultValue = "True")
     public boolean prettyPrint;
     

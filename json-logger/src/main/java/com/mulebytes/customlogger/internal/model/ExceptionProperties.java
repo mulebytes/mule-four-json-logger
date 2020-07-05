@@ -9,36 +9,53 @@ import org.mule.runtime.extension.api.annotation.param.display.Summary;
 public class ExceptionProperties {
 
 	@Parameter
-	@DisplayName("Error Classification")
-	@Optional(defaultValue = "TECHNICAL_ERROR")
-	private ErrorClassification.errorClassification errorClassification;
-	@Parameter
-	@Optional(defaultValue = "#[now()]")
-	@DisplayName("Timestamp")
-	@Summary("Timestamp")
-	private String timeStamp;
-	@Parameter
-	@DisplayName("Error Code")
-	@Summary("Error Code")
-	@Optional(defaultValue = "ERR001")
-	private String errorCode;
-	@Parameter
-	@DisplayName("Error Type")
-	@Summary("Type of Exception")
-	@Optional(defaultValue = "#[[error.errorType.namespace default (app.name),error.errorType.identifier default \"ERROR\"] joinBy \":\"]")
-	private String errorType;
-	@Parameter
-	@DisplayName("Description")
-	@Summary("Exception Description")
-	@Optional(defaultValue = "#[error.description default \"Error Occured\" replace \"\\\"\" with \"\"]")
-	private String errorDescription;
-
-	@Parameter
 	@Optional(defaultValue = "#[uuid()]")
 	@DisplayName("Transaction ID")
 	@Summary("Transaction UUID")
 	@Example("#[vars.transactionId]")
 	private String transactionId;
+	
+	@Parameter
+	@Optional(defaultValue = "#[uuid()]")
+	@DisplayName("Correlation ID")
+	@Summary("Correlation ID")
+	@Example("#[vars.correlationId]")
+	private String correlationId;
+	
+	@Parameter
+	@DisplayName("Error Classification")
+	@Optional(defaultValue = "TECHNICAL_ERROR")
+	private ErrorClassification.errorClassification errorClassification;
+
+	@Parameter
+	@Optional(defaultValue = "#[now()]")
+	@DisplayName("Timestamp")
+	@Summary("Timestamp")
+	private String timeStamp;
+
+	@Parameter
+	@DisplayName("Error Code")
+	@Summary("Error Code")
+	@Optional(defaultValue = "ERR001")
+	private String errorCode;
+	
+	@Parameter
+	@DisplayName("Error Severity")
+	@Summary("Error Severity")
+	@Optional(defaultValue = "Severity-01")
+	private String errorSeverity;
+	
+	@Parameter
+	@DisplayName("Error Type")
+	@Summary("Type of Exception")
+	@Optional(defaultValue = "#[[error.errorType.namespace default (app.name),error.errorType.identifier default \"ERROR\"] joinBy \":\"]")
+	private String errorType;
+
+	@Parameter
+	@DisplayName("Description")
+	@Summary("Exception Description")
+	@Optional(defaultValue = "#[error.description default \"Error Occured\" replace \"\\\"\" with \"\"]")
+	private String errorDescription;
 
 	@Parameter
 	@Optional(defaultValue = "#[if((isEmpty(payload)) != true and payload != null)write(payload, \"$(payload.^mimeType)\") else null]")
@@ -72,6 +89,10 @@ public class ExceptionProperties {
 	public String getTransactionId() {
 		return transactionId;
 	}
+	
+	public String getCorrelationId() {
+		return correlationId;
+	}
 
 	public String getTimestamp() {
 		return timeStamp;
@@ -95,6 +116,10 @@ public class ExceptionProperties {
 
 	public String getErrorType() {
 		return errorType;
+	}
+	
+	public String getErrorSeverity() {
+		return errorSeverity;
 	}
 
 	public String getErrorDescription() {

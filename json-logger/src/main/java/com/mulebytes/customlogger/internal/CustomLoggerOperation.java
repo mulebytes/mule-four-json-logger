@@ -35,6 +35,7 @@ public class CustomLoggerOperation {
 
 	@MediaType(value = ANY, strict = false)
 	public void log(@ParameterGroup(name = "Log") LogProperties logProperties,
+			@ParameterGroup(name = "Optional Details") OptionalProperties optionalProperties,
 			@ParameterGroup(name = "Additional Log Info") ExtendedPoperties extendedLogInfo,
 			ComponentLocation location,
 			@Config CustomLoggerConfiguration customLoggerConfiguration) throws JsonProcessingException {
@@ -47,26 +48,33 @@ public class CustomLoggerOperation {
 		final Map<LoggerLevelProperty.LogLevel, Level> levelMap = getMappings();
 
 		LinkedHashMap<String, Object> logContent = new LinkedHashMap<>();
-		logContent.put("appName", customLoggerConfiguration.getAppName());
-		logContent.put("appVersion", customLoggerConfiguration.getAppVersion());
-		logContent.put("env", customLoggerConfiguration.getEnv());
-		logContent.put("timestamp", logProperties.getTimestamp());
-
-		Map<String, Object> logOnes = new HashMap<>();
-		logOnes.put("correlationId", logProperties.getTransactionId());
+		logContent.put("timestamp", logProperties.getTimestamp());		
+		logContent.put("applicationName", customLoggerConfiguration.getAppName());
+		logContent.put("applicationVersion", customLoggerConfiguration.getAppVersion());
+		logContent.put("environment", customLoggerConfiguration.getEnv());
+		
+		if(optionalProperties != null){
+			logContent.put("businessProcessName", optionalProperties.getBusinessProcessName());
+			logContent.put("sourceSystem", optionalProperties.getSourceSystem());
+			logContent.put("destinationSystem", optionalProperties.getDestinationSystem());
+		}
+		
+		LinkedHashMap<String, Object> logOnes = new LinkedHashMap<>();
+		logOnes.put("transactionId", logProperties.getTransactionId());
+		logOnes.put("correlationId", logProperties.getCorrelationId());
+		logOnes.put("tracePoint", logProperties.getTracePoint());
 		logOnes.put("logMessage", logProperties.getMessage());
 		logOnes.put("payload", logProperties.getPayload());
-		logOnes.put("tracePoint", logProperties.getTracePoint());
 		logContent.put("log", logOnes);
 
-		Map<String, String> locationInfo = new HashMap<>();
-		locationInfo.put("location", location.getLocation());
-		locationInfo.put("rootContainer", location.getRootContainerName());
+		LinkedHashMap<String, String> locationInfo = new LinkedHashMap<>();		
 		locationInfo.put("component", location.getComponentIdentifier()
 				.getIdentifier().toString());
 		locationInfo.put("fileName", location.getFileName().orElse(""));
-
+		locationInfo.put("lineNumber", location.getLineInFile().toString());
+		locationInfo.put("rootContainer", location.getRootContainerName());
 		logContent.put("logLocation", locationInfo);
+		
 		if(extendedLogInfo.getExtendedPoperties() != null)
 		logContent.put("additionalLogDetails", extendedLogInfo.getExtendedPoperties());
 		ObjectMapper mapper = new ObjectMapper();

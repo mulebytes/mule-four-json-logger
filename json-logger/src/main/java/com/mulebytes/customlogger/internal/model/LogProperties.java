@@ -14,11 +14,20 @@ public class LogProperties {
 	@Summary("Transaction UUID")
 	@Example("#[vars.transactionId]")
 	private String transactionId;
+	
+	@Parameter
+	@Optional(defaultValue = "#[uuid()]")
+	@DisplayName("Correlation ID")
+	@Summary("Correlation ID")
+	@Example("#[vars.correlationId]")
+	private String correlationId;
+	
 	@Parameter
 	@Optional(defaultValue = "#[now()]")
 	@DisplayName("Timestamp")
 	@Summary("Timestamp")
 	private String timeStamp;
+	
 	@Parameter
 	@Optional
 	@DisplayName("Message")
@@ -60,6 +69,10 @@ public class LogProperties {
 
 	public String getTransactionId() {
 		return transactionId;
+	}
+
+	public String getCorrelationId() {
+		return correlationId;
 	}
 
 	public String getTimestamp() {

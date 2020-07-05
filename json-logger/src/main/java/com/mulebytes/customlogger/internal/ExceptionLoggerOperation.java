@@ -33,6 +33,7 @@ public class ExceptionLoggerOperation {
 	 */
 	@MediaType(value = ANY, strict = false)
 	public void errorLog(@ParameterGroup(name = "Exception") ExceptionProperties exceptionProperties,
+			@ParameterGroup(name = "Optional Details") OptionalProperties optionalProperties,
 			@ParameterGroup(name = "Additional Error Info") ExtendedPoperties extendedErrorInfo,
 			ComponentLocation location,
 			@Config CustomLoggerConfiguration customLoggerConfiguration) throws JsonProcessingException {
@@ -42,37 +43,41 @@ public class ExceptionLoggerOperation {
 		final Map<LoggerLevelProperty.LogLevel, Level> levelMap = getMappings();
 
 		LinkedHashMap<String, Object> logContent = new LinkedHashMap<>();
-		logContent.put("appName", customLoggerConfiguration.getAppName());
-		logContent.put("appVersion", customLoggerConfiguration.getAppVersion());
-		logContent.put("env", customLoggerConfiguration.getEnv());
 		logContent.put("timestamp", exceptionProperties.getTimestamp());
+		logContent.put("applicationName", customLoggerConfiguration.getAppName());
+		logContent.put("applicationVersion", customLoggerConfiguration.getAppVersion());
+		logContent.put("environment", customLoggerConfiguration.getEnv());
 
-		// This is because, we need to see what is in the nested object when the
-		// Hashmap is logged.
-		Map<String, Object> logOnes = new HashMap<>();
+		if(optionalProperties != null){
+			logContent.put("businessProcessName", optionalProperties.getBusinessProcessName());
+			logContent.put("sourceSystem", optionalProperties.getSourceSystem());
+			logContent.put("destinationSystem", optionalProperties.getDestinationSystem());
+		}
+		LinkedHashMap<String, Object> logOnes = new LinkedHashMap<>();
 		logOnes.put("transactionId", exceptionProperties.getTransactionId());
+		logOnes.put("correlationId", exceptionProperties.getCorrelationId());
 		logOnes.put("payload", exceptionProperties.getPayload());
 		logOnes.put("tracePoint", exceptionProperties.getTracePoint());
 		logContent.put("log", logOnes);
 
 		if (exceptionProperties != null) {
-			Map<String, Object> exceptionOnes = new HashMap<>();
+			LinkedHashMap<String, Object> exceptionOnes = new LinkedHashMap<>();
 			exceptionOnes.put("errorCode", exceptionProperties.getErrorCode());
 			exceptionOnes.put("errorType", exceptionProperties.getErrorType());
+			exceptionOnes.put("errorSeverity", exceptionProperties.getErrorSeverity());
 			exceptionOnes.put("errorClassification", exceptionProperties.getErrorClassification());
-			exceptionOnes.put("errorDescription",
-					exceptionProperties.getErrorDescription());
+			exceptionOnes.put("errorDescription",exceptionProperties.getErrorDescription());
 			logContent.put("errorDetails", exceptionOnes);
 		}
 
-		Map<String, String> locationInfo = new HashMap<>();
-		locationInfo.put("location", location.getLocation());
-		locationInfo.put("rootContainer", location.getRootContainerName());
+		LinkedHashMap<String, String> locationInfo = new LinkedHashMap<>();		
 		locationInfo.put("component", location.getComponentIdentifier()
 				.getIdentifier().toString());
 		locationInfo.put("fileName", location.getFileName().orElse(""));
-
+		locationInfo.put("lineNumber", location.getLineInFile().toString());
+		locationInfo.put("rootContainer", location.getRootContainerName());
 		logContent.put("logLocation", locationInfo);
+		
 		if(extendedErrorInfo.getExtendedPoperties() != null)
 		logContent.put("additionalErrorDetails", extendedErrorInfo.getExtendedPoperties());
 		ObjectMapper mapper = new ObjectMapper();
