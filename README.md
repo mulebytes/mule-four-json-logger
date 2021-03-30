@@ -4,8 +4,8 @@ Custom Logger
 Connector Operations
 --------------------
 
-![](media/image1.png){width="1.7291666666666667in"
-height="1.774780183727034in"}
+![image](https://user-images.githubusercontent.com/39791614/113007250-afc3d900-9193-11eb-9169-d1ff843965f7.png)
+
 
 Log
 ---
@@ -15,11 +15,10 @@ Info** to populate **Key-Value** pairs.
 
 Which will result in final log JSON.
 
-![](media/image2.jpeg){width="7.268055555555556in"
-height="4.604166666666667in"}
+![image](https://user-images.githubusercontent.com/39791614/113007286-b9e5d780-9193-11eb-8171-5c321aee99b7.png)
 
-![](media/image3.jpeg){width="7.268055555555556in"
-height="2.0236111111111112in"}
+![image](https://user-images.githubusercontent.com/39791614/113007337-c1a57c00-9193-11eb-89f8-f7fe9aaf31d4.png)
+
 
 Error Log
 ---------
@@ -32,8 +31,6 @@ Info** to populate **Key-Value** pairs.
 
 Which will result in final log JSON.
 
-![](media/image4.jpeg){width="7.268055555555556in"
-height="5.042361111111111in"}
+![image](https://user-images.githubusercontent.com/39791614/113007357-c9652080-9193-11eb-86ba-c2b45caefa71.png)
 
-![](media/image5.jpeg){width="7.268055555555556in"
-height="2.6166666666666667in"}
+![image](https://user-images.githubusercontent.com/39791614/113007396-cf5b0180-9193-11eb-9aa0-35d32fd44fe2.png)
