@@ -39,4 +39,4 @@ Which will result in final log JSON.
 Javadoc
 ---------
 Download below file and open it in Browser again
-https://raw.githubusercontent.com/mulebytes/mule-four-json-logger/master/json-logger/target/docs/json-logger-documentation.html
+https://github.com/mulebytes/mule-four-json-logger/blob/master/json-logger/target/docs/json-logger-documentation.html
