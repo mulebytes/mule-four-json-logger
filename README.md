@@ -34,3 +34,9 @@ Which will result in final log JSON.
 ![image](https://user-images.githubusercontent.com/39791614/113007357-c9652080-9193-11eb-86ba-c2b45caefa71.png)
 
 ![image](https://user-images.githubusercontent.com/39791614/113007396-cf5b0180-9193-11eb-9aa0-35d32fd44fe2.png)
+
+
+Javadoc
+---------
+Download below file and open it in Browser again
+https://raw.githubusercontent.com/mulebytes/mule-four-json-logger/master/json-logger/target/docs/json-logger-documentation.html
